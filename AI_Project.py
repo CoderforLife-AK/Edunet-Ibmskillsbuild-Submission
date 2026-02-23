@@ -20,6 +20,7 @@ def update_profile():
 
 #Configure Gemini
 GOOGLE_API_KEY= "AIzaSyD-hDJXetOfaoHnqLQ-LuJFdP-3nzpREdc"
+GOOGLE_API_KEY= st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=GOOGLE_API_KEY)
 
 #iNITIALIZE SESSION STATE

@@ -1,15 +1,30 @@
+from dotenv import load_dotenv
+load_dotenv()
+
+
+
 import streamlit as st
 import os
 import google.generativeai as genai
 from PIL import Image
 
+def update_profile():
+  st.session_state.health_profile = {
+    'goals':st.session_state.input_goals,
+    'conditions':st.session_state.input_conditions,
+    'routine':st.session_state.input_routine,
+    'preferences':st.session_state.input_preferences,
+    'restrictions':st.session_state.input_restrictions
+  }
+  st.toast("Profile saved!!")
+
 #Configure Gemini
-GOOGLE_API_KEY= "AIzaSyDfmhjiNyHwShFbBW4MQL7VxBYM9MPftak"
+GOOGLE_API_KEY= "AIzaSyD-hDJXetOfaoHnqLQ-LuJFdP-3nzpREdc"
 genai.configure(api_key=GOOGLE_API_KEY)
 
 #iNITIALIZE SESSION STATE
 if 'health profile' not in st.session_state:
-  st.session_state.health_profile ={
+  st.session_state.health_profile = {
       'goals': 'Lose 10 pounds in 3 months\nImprove cardiovascular health',
       'conditions': 'None',
       'routine': '30-minute walk 4x/week',
@@ -30,7 +45,7 @@ if 'health profile' not in st.session_state:
       response = model.generate_content(content)
       return response.text
     except Exception as e:
-      st.error(f"Error getting Gemini response: {str(e)}")
+      return f"Error getting Gemini response: {str(e)}"
 
   def input_image_setup(uploaded_file):
     if uploaded_file is not None:
@@ -49,24 +64,24 @@ if 'health profile' not in st.session_state:
   with st.sidebar:
     st.subheader("Your Health Profile")
 
-    health_goals = st.text_area("Health Outcomes you expect",
-                                value=st.session_state.health_profile['goals'])
-    medical_conditions = st.text_area("Your Medical Conditon",
-                                      value=st.session_state.health_profile['conditions'])
-    fitness_routines = st.text_area("Your Fitness Routine",
-                                    value=st.session_state.health_profile['routine'])
-    food_preferences = st.text_area("Food Preferences",
-                                    value=st.session_state.health_profile['preferences'])
-    restrictions = st.text_area("Inevitable Dietary Restrictions",
-                                value=st.session_state.health_profile['restrictions'])
+    health_goals=st.text_area("Health Outcomes you expect",
+                 key="input_goals")
+    medical_conditions=st.text_area("Your Medical Conditon",
+                 key="input_conditions")
+    fitness_routines=st.text_area("Your Fitness Routine",
+                 key="input_routine")
+    food_preferences=st.text_area("Food Preferences",
+                 key="input_preferences")
+    restictions=st.text_area("Inevitable Dietary Restrictions",
+                 key="input_restrictions")
 
-    if st.button("Update Health Profile"):
+    if st.button("Update Health Profile",on_click=update_profile):
       st.session_state.health_profile = {
-        'goals': health_goals,
-        'conditions': medical_conditions,
-        'routine': fitness_routines,
-        'preferences': food_preferences,
-        'restrictions': restrictions
+        'goals': st.session_state.input_goals,
+        'conditions': st.session_state.input_conditions,
+        'routine': st.session_state.input_routine,
+        'preferences': st.session_state.input_preferences,
+        'restrictions': st.session_state.input_restrictions
       }
       st.success("Health profile updated successfully!")
 
@@ -81,11 +96,10 @@ if 'health profile' not in st.session_state:
     with col1:
       st.write("Your Current Needs (Important ones)")
       user_input = st.text_area("Describe your current needs and preferences",
-                                placeholder="e.g., 'I need quick meal for work'"
-                                )
+                                placeholder="e.g., 'I need quick meal for work'")
 
     with col2:
-      st.write("Your Health Profile")
+      st.write("### Your Health Profile")
       st.json(st.session_state.health_profile)
 
     if st.button("Generate My Personalized Meal Plan"):
@@ -98,6 +112,7 @@ if 'health profile' not in st.session_state:
           prompt = f"""
 
           Create a personalized meal plan based on the following health preferences
+          
           Health Goals: {st.session_state.health_profile['goals']}
           Medical Condition: {st.session_state.health_profile['conditions']}
           Fitness Routine: {st.session_state.health_profile['routine']}

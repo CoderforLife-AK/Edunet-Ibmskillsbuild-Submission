@@ -25,9 +25,9 @@ genai.configure(api_key=GOOGLE_API_KEY)
 #iNITIALIZE SESSION STATE
 if 'health profile' not in st.session_state:
   st.session_state.health_profile = {
-      'goals': 'Lose 10 pounds in 3 months\nImprove cardiovascular health',
+      'goals': 'Lose 10 Kgs in 3 months\nImprove cardiovascular health',
       'conditions': 'None',
-      'routine': '30-minute walk 4x/week',
+      'routine': '1 Hr workout daily',
       'preferences': 'Vegetarian\nLow Carb',
       'restrictions': 'No Dairy \nNo Nuts'
   }
@@ -65,15 +65,15 @@ if 'health profile' not in st.session_state:
     st.subheader("Your Health Profile")
 
     health_goals=st.text_area("Health Outcomes you expect",
-                 key="input_goals")
+                              placeholder="Lose 10 Kg's in 3 months\nImprove cardiovascular health",key="input_goals")
     medical_conditions=st.text_area("Your Medical Conditon",
-                 key="input_conditions")
+                                    placeholder="None",key="input_conditions")
     fitness_routines=st.text_area("Your Fitness Routine",
-                 key="input_routine")
+                                  placeholder="1 Hr workout daily",key="input_routine")
     food_preferences=st.text_area("Food Preferences",
-                 key="input_preferences")
+                                  placeholder="Vegetarian\nLow carb",key="input_preferences")
     restictions=st.text_area("Inevitable Dietary Restrictions",
-                 key="input_restrictions")
+                             placeholder="No Dairy\nNo nuts",key="input_restrictions")
 
     if st.button("Update Health Profile",on_click=update_profile):
       st.session_state.health_profile = {

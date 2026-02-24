@@ -23,7 +23,7 @@ GOOGLE_API_KEY= st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=GOOGLE_API_KEY)
 
 #iNITIALIZE SESSION STATE
-if 'health profile' not in st.session_state:
+if 'health_profile' not in st.session_state:
   st.session_state.health_profile = {
       'goals': 'Lose 10 Kgs in 3 months\nImprove cardiovascular health',
       'conditions': 'None',
